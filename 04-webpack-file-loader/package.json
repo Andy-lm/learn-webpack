@@ -1,0 +1,17 @@
+{
+  "name": "01-webpack-introductory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx webpack --config webpack.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "file-loader": "^4.3.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.12"
+  }
+}

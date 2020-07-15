@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>05-webpack-file-loader</title>
+</head>
+<body>
+<!--
+1.什么是loader?
+webapck的本质是一个模块打包工具, 所以webpack默认只能处理JS文件,不能处理其他文件,
+因为其他文件中没有模块的概念, 但是在企业开发中我们除了需要对JS进行打包以外,
+还有可能需要对图片/CSS等进行打包, 所以为了能够让webpack能够对其它的文件类型进行打包,
+在打包之前就必须将其它类型文件转换为webpack能够识别处理的模块,
+用于将其它类型文件转换为webpack能够识别处理模块的工具我们就称之为loader
+
+2.如何使用loader
+webpack中的loader都是用NodeJS编写的, 但是在企业开发中我们完全没有必要自己编写,
+因为已经有众多大神帮我们编写好了企业中常用的loader, 我们只需要安装、配置、使用即可
+
+2.1通过npm安装对应的loader
+2.2按照loader作者的要求在webpack进行相关配置
+2.3使用配置好的loader
+
+3.fileloader使用
+https://www.webpackjs.com/loaders/file-loader/
+3.1安装file-loader
+npm install --save-dev file-loader
+3.2在webpack.config.js中配置file-loader
+module: {
+    rules: [
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {}
+          }
+        ]
+      }
+    ]
+  }
+-->
+</body>
+</html>
