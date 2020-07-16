@@ -3,6 +3,8 @@ const icon = require("./lmm.jpg");
 console.log(icon);
 
 let oImg = document.createElement("img");
+// file-loader处理之后我们导入图片拿到的是图片打包之后的一个对象
+// 只有icon.default才是打包后图片的地址
 oImg.src = icon.default;
 document.body.appendChild(oImg);
 
