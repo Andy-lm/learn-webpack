@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>16-webpack-iconfont-loader</title>
+</head>
+
+<body>
+    <!--
+1.如何打包字体图标
+字体图标中也用到了url用到了文件, 所以我们需要通过file-loader来处理字体图标文件
+{
+    test: /\.(eot|svg|ttf|woff|woff2)$/,
+    use:[{
+        loader: "file-loader",
+        options: {
+            name: "[name].[ext]",
+            outputPath: "font/",
+        }
+    }]
+}
+-->
+    <script src="./bundle/bundle.js"></script>
+</body>
+
+</html>
