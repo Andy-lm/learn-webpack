@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>18-webpack-clean-plugin</title>
+</head>
+
+<body>
+    <!--
+3.mini-css-extract-plugin压缩css
+https://www.npmjs.com/package/mini-css-extract-plugin
+3.1安装JS代码压缩插件
+npm install --save-dev terser-webpack-plugin
+3.2安装CSS代码压缩插件
+npm install --save-dev optimize-css-assets-webpack-plugin
+3.3导入插件
+const TerserJSPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+3.4配置webpack优化项
+optimization: {
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+}
+注意: 由于配置了webpack的optimization.minimizer项目会覆盖默认的JS压缩选项,
+所以JS代码也需要通过插件自己压缩
+-->
+</body>
+
+</html>

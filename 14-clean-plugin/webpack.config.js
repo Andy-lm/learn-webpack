@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     /*
@@ -29,12 +30,7 @@ module.exports = {
         /*
         path: 指定打包之后的文件存储到什么地方
         * */
-        path: path.resolve(__dirname, "bundle"),
-        /*   
-            webpack要将图片进行打包，需要安装儒url-loader加载器，加载器有个默认的设置选项limit：8196，当你的图片大小不超过8kb的时候，打包的时候会生成base64位的图片地址，这种情况下背景图片可以正常显示，当你图片大小超过limit设置的限制时，它会生成一个静态资源图片
-            表示在url地址前加上./bundle/
-        * */
-        // publicPath: './bundle/'
+        path: path.resolve(__dirname, "bundle")
     },
     /*
     module: 告诉webpack如何处理webpack不能够识别的文件
@@ -64,7 +60,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             // 指定图片限制的大小
-                            limit: 1024 * 100,
+                            limit: 1024,
                             // 指定打包后文件名称
                             name: '[name].[ext]',
                             // 指定打包后文件存放目录
@@ -123,13 +119,16 @@ module.exports = {
     /*
     plugins: 告诉webpack需要新增一些什么样的功能
     * */
-    plugins: [new HtmlWebpackPlugin({
-        // 自动生成一个html文件来引用打包后的文件
-        template: "./index.html", // 设置引用后的模板
-        minify: {
-            // 设置模板压缩
-            collapseWhitespace: true
-        }
-
-    })]
+    plugins: [
+        new HtmlWebpackPlugin({
+            // 指定打包的模板, 如果不指定会自动生成一个空的
+            template: "./index.html",
+            minify: {
+                // 告诉htmlplugin打包之后的html文件需要压缩
+                collapseWhitespace: true,
+            }
+        }),
+        // 每次在打包前先清空用于打包的目录
+        new CleanWebpackPlugin()
+    ]
 };
