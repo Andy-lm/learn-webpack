@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>24-webpack-dev-server</title>
+</head>
+
+<body>
+    <!--
+1.什么是HMR?
+1.1通过webpack-dev-server自动打包并没有真正的放到指定的目录中
+因为读写磁盘是非常耗时和消耗性能的,
+所以为了提升性能webpack-dev-server将转换好的内容直接放到了内存中
+1.2通过webpack-dev-server可以实现实时监听打包内容的变化,
+每次打包之后都会自动刷新网页, 但是正是因为每当内容被修改时都会自动刷新网页
+所以给我们带来了很多不便, 这时就需要通过HMR插件来优化调试开发
+1.3HMR(HotModuleReplacementPlugin)热更新插件,
+会在内容发生改变的时候时时的更新修改的内容但是不会重新刷新网站
+
+2.HMR使用:
+HotModuleReplacementPlugin是一个内置插件, 所以不需要任何安装直接引入webpack模块即可使用
+2.1在devServer中开启热更新
+hot: true, // 开启热更新
+hotOnly: true // 即使热更新不生效，浏览器也不自动刷新
+2.2在webpack.config.js中创建热更新插件
+new Webpack.HotModuleReplacementPlugin()
+
+3.注意点:
+如果是通过style-loader来处理CSS, 那么经过前面两步就已经实现了热更新
+如果是通过MiniCssExtractPlugin.loader来处理CSS, 那么还需要额外配置MiniCssExtractPlugin.loader
+options:{
+    hmr: true
+}
+-->
+
+
+    <!--
+1.JS模块使用HMR注意点?
+import "./index.less"
+对于css模块而言, 在css-loader中已经帮我们实现了热更新, 只要css代码被修改就会立即更新
+import copy from "./test.js"
+但是对于js模块而言, 系统默认并没有给我们实现热更新, 所以修改了js模块代码并不会立即更新
+
+2.JS模块如何实现热更新?
+2.1手动监听模块变化
+if(module.hot){ // 判断是否开启热更新
+    module.hot.accept("./test.js", function () { // 监听指定JS模块变化
+
+    });
+}
+2.2手动编写模块变化后的业务逻辑
+if(module.hot){
+    module.hot.accept("./test.js", function () {
+        let div = document.querySelector("div");
+        console.log(div);
+        document.body.removeChild(div);
+        copy();
+    });
+}
+-->
+</body>
+
+</html>

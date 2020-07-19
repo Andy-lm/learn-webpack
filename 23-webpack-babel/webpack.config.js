@@ -62,7 +62,7 @@ module.exports = {
     一种是开发模式(development): 不会对打包的JS代码进行压缩
     还有一种就是上线(生产)模式(production): 会对打包的JS代码进行压缩
     * */
-    mode: "production", // "production" | "development"
+    mode: "development", // "production" | "development"
     /*
     entry: 指定需要打包的文件
     * */
@@ -85,6 +85,34 @@ module.exports = {
     * */
     module: {
         rules: [
+            // 打包JS代码规则，将ES678转换为ES5
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,  // 告诉webpack不处理哪一个文件夹
+                loader: "babel-loader",
+                options: {
+                    presets: [["@babel/preset-env", {
+                        targets: {
+                            "chrome": "58" // 表示在58以上的版本不需要转换
+                        },
+                        // useBuiltIns: "usage" // 只有将用到的代码打包到文件中，不再需要手动导入polyfill
+                    }]],
+                    "plugins": [
+                        [
+                            "@babel/plugin-transform-runtime",
+                            {
+                                "absoluteRuntime": false,
+                                "corejs": 2, // 不要污染全局环境
+                                "helpers": true,
+                                "regenerator": true,
+                                "useESModules": false,
+                                "version": "7.0.0-beta.0"
+                            }
+                        ]
+                    ]
+
+                },
+            },
             // 打包字体图标规则
             {
                 test: /\.(eot|json|svg|ttf|woff|woff2)$/,
