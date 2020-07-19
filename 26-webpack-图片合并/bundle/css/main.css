@@ -1,0 +1,49 @@
+.animal{
+    width: 128px;
+    height: 128px;
+}
+.animal1{
+    background-image: url(images/sprite.png);
+    background-position: 0px 0px;
+    background-size: 340px 340px;
+}
+.animal2{
+    background-image: url(images/sprite.png);
+    background-position: -128px 0px;
+    background-size: 340px 340px;
+}
+.animal3{
+    background-image: url(images/sprite.png);
+    background-position: 0px -128px;
+    background-size: 340px 340px;
+}
+.animal4{
+    background-image: url(images/sprite.png);
+    background-position: -128px -128px;
+    background-size: 340px 340px;
+}
+
+.header{
+    width: 84px;
+    height: 84px;
+}
+.header1{
+    background-image: url(images/sprite.png);
+    background-position: -256px 0px;
+    background-size: 340px 340px;
+}
+.header2{
+    background-image: url(images/sprite.png);
+    background-position: -256px -84px;
+    background-size: 340px 340px;
+}
+.header3{
+    background-image: url(images/sprite.png);
+    background-position: -256px -168px;
+    background-size: 340px 340px;
+}
+.header4{
+    background-image: url(images/sprite.png);
+    background-position: 0px -256px;
+    background-size: 340px 340px;
+}

@@ -58,7 +58,8 @@ module.exports = {
         /*
         path: 指定打包之后的文件存储到什么地方
         * */
-        path: path.resolve(__dirname, "bundle")
+        path: path.resolve(__dirname, "bundle"),
+        // publicPath: '../../',
     },
     /*
     module: 告诉webpack如何处理webpack不能够识别的文件
@@ -134,10 +135,38 @@ module.exports = {
                             // 指定打包后文件名称
                             name: '[name].[ext]',
                             // 指定打包后文件存放目录
-                            outputPath: 'images/',
+                            outputPath: './images/',
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            mozjpeg: {
+                                progressive: true,
+                                quality: 65
+                            },
+                            // optipng.enabled: false will disable optipng
+                            optipng: {
+                                enabled: false,
+                            },
+                            pngquant: {
+                                quality: [0.65, 0.90],
+                                speed: 4
+                            },
+                            gifsicle: {
+                                interlaced: false,
+                            },
+                            // the webp option will enable WEBP
+                            webp: {
+                                quality: 75
+                            }
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(htm|html)$/i,
+                loader: 'html-withimg-loader'
             },
             // 打包CSS规则
             {
@@ -153,6 +182,7 @@ module.exports = {
                     {
                         loader: "css-loader",
                         options: {
+                            // url: false, // 要禁用 css-loader 解析 url()
                             // modules: true // 开启CSS模块化
                         }
                     },
