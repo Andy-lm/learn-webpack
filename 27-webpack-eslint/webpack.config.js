@@ -66,6 +66,18 @@ module.exports = {
     * */
     module: {
         rules: [
+            // 检查代码规范规则
+            {
+                // enforce: "pre",让当前loader在其他loader之前执行
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                include: path.resolve(__dirname, "src"),
+                loader: 'eslint-loader',
+                options: {
+                    // eslint options (if necessary)
+                },
+            },
             // 打包JS规则
             /*
             {
