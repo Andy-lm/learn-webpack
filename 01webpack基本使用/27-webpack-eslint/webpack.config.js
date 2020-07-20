@@ -66,7 +66,7 @@ module.exports = {
     * */
     module: {
         rules: [
-            // 检查代码规范规则
+            // 检查代码规范规则ESlint
             {
                 // enforce: "pre",让当前loader在其他loader之前执行
                 enforce: "pre",
@@ -76,6 +76,7 @@ module.exports = {
                 loader: 'eslint-loader',
                 options: {
                     // eslint options (if necessary)
+                    fix: true
                 },
             },
             // 打包JS规则
