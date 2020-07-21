@@ -231,7 +231,7 @@ module.exports = {
             // 指定打包的模板, 如果不指定会自动生成一个空的
             template: "./src/index.html",
             minify: {
-                // 告诉htmlplugin打包之后的html文件需要压缩
+                // 告诉htmlplugin打包之后的html文件是否需要压缩
                 // collapseWhitespace: true,
             }
         }),
