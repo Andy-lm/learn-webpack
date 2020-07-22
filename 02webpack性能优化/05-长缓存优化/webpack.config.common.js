@@ -5,9 +5,18 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 module.exports = {
+    // 告诉webpack需要对代码进行分割
+    // optimization: {
+    //     splitChunks: {
+    //         chunks: "all"
+    //     }
+    // },
     // entry: 指定需要打包的文件
 
-    entry: "./src/js/index.js",
+    entry: {
+        // other: "./src/js/demo.js",
+        main: "./src/js/index.js",
+    },
     /*
     output: 指定打包之后的文件输出的路径和输出的文件名称
     * */
@@ -15,7 +24,7 @@ module.exports = {
         /*
         filename: 指定打包之后的JS文件的名称
         * */
-        filename: "js/bundle.js",
+        filename: "js/[name].js",
         /*
         path: 指定打包之后的文件存储到什么地方
         * */
