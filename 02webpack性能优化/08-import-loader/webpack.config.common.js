@@ -2,15 +2,37 @@ const path = require("path");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const webpack = require("webpack");
 
 module.exports = {
     // 告诉webpack需要对代码进行分割
-    // optimization: {
-    //     splitChunks: {
-    //         chunks: "all"
-    //     }
-    // },
+    optimization: {
+        splitChunks: {
+            chunks: "all", // 对那些代码进行分割 async(只分割异步加载模块)、all(所有导入模块)
+            minSize: 30000, // 表示被分割的代码体积至少有多大才分割(单位是字节)
+            minChunks: 1,  //  表示至少被引用多少次数才分割，默认为1
+            maxAsyncRequests: 5, // 异步加载并发最大请求数(保持默认即可)
+            maxInitialRequests: 3, // 最大的初始请求数(保持默认即可)
+            automaticNameDelimiter: '~', // 命名连接符
+            name: true, // 拆分出来块的名字使用0/1/2... 还是指定名称
+            // 默认情况下所有在node_modules中引入的文件打包在一个文件中，其他引入的文件打包到一个文件中
+            cacheGroups: { // 缓存组, 将当前文件中导入的所有模块缓存起来统一处理
+                vendors: { // 分割从node_modules目录中导入的模块
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10 // 优先级, 值越小越优先
+                },
+                // 如果我们导入的模块同时满足两个条件，那么会按照优先级来写入
+                // 例如：我们在node_modules中导入了jQuery，也从其他地方导入了jQuery首先会处理
+                // 从node_modules中导入的，写入到vendors中去
+                default: { // 分割从其它地方导入的模块
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true // 如果当前代码块包含的模块已经有了，就不在产生一个新的代码块
+                }
+            }
+        }
+
+    },
     // entry: 指定需要打包的文件
 
     entry: {
@@ -91,6 +113,12 @@ module.exports = {
                     ]
                 }
             },
+            // {
+            //     test: /\.js$/,
+            //     exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
+            //     // 只要用到$就去加载jquery
+            //     loader: 'imports-loader?$=jquery'
+            // },
             // 打包字体图标规则
             {
                 test: /\.(eot|json|svg|ttf|woff|woff2)$/,
@@ -219,6 +247,9 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: 'css/[name].[contenthash:8].css',
+        }),
+        new webpack.ProvidePlugin({
+            $: "jquery" // 表示在全局状态下导入jquery
         })
     ]
 };
