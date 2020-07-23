@@ -1,10 +1,10 @@
 // import $ from "jquery";
 import addBorder from "./common.js";
-// $("body").css({
-//     width: "100%",
-//     height: "100%",
-//     background: "red"
-// })
+$("body").css({
+    width: "100%",
+    height: "100%",
+    background: "red"
+})
 
 $("div").css({
     width: "100px",
@@ -12,6 +12,7 @@ $("div").css({
     backgroundColor: "red"
 })
 addBorder();
+// console.log(this);
 // const oBtn = document.querySelector("button");
 // oBtn.addEventListener("click", function () {
 //     const $div = addDiv();

@@ -49,21 +49,6 @@ module.exports = {
             //     },
             // },
             // 打包JS规则
-            /*
-            {
-                test: /\.js$/,
-                exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
-                loader: "babel-loader",
-                options: {
-                    "presets": [["@babel/preset-env", {
-                        targets: {
-                            // "chrome": "58",
-                        },
-                        useBuiltIns: "usage"
-                    }]],
-                }
-            },
-             */
             {
                 test: /\.js$/,
                 exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
@@ -90,15 +75,6 @@ module.exports = {
                     ]
                 }
             },
-            /* {
-                // 此处运行会报错，未知bug
-                test: /\.js$/,
-                exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
-                // 只要用到$就去加载jquery
-                // 改变this的指向
-                loader: 'imports-loader?this=>window'
-                loader: 'imports-loader?$=jquery'
-            }, */
             // 打包字体图标规则
             {
                 test: /\.(eot|json|svg|ttf|woff|woff2)$/,

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>47-webpack-resolve</title>
+</head>
+<body>
+<!--
+3.什么是resolve?
+https://www.webpackjs.com/configuration/resolve/
+resolve用于配置导入模块的解析规则
+
+4.resolve常用配置
+4.1映射导入路径, 简化导入代码
+import 'bootstrap/dist/css/bootstrap.css';
+   但是这种写法每次都要写很长的一串路径, 有没有办法可以简化呢?
+import $ from 'bootstrap';
+   那就是通过resolve的alias
+resolve: {
+    // 创建 import 或 require 的别名，来确保模块引入变得更简单
+    alias: {
+        bootstrap: path.resolve(__dirname, "bootstrap/dist/css/bootstrap.css")
+    },
+}
+
+4.2修改入口查找顺序, 简化导入代码
+resolve: {
+    // 指定模块入口的查找顺序
+    mainFields: ["style", "main"],
+}
+
+4.4修改查找顺序, 简化导入代码
+resolve: {
+    // 指定导入模块查找顺序
+    extensions: [".css", ".js"]
+}
+
+4.2通过import导入模块的时候会先在node_modules中查找, 找不到再逐级向上查找
+   这样在打包的时候非常消耗性能, 能不能在打包的时候让webpack只去指定的目录查找
+   那就是通过resolve的modules
+resolve: {
+    // 指定查找范围, 告诉webpack只在node_modules中查找
+    modules: ["node_modules"],
+}
+-->
+</body>
+</html>
