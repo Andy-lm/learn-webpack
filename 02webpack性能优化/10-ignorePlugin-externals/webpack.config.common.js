@@ -5,16 +5,24 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require("webpack");
 
 module.exports = {
-    resolve: {
-        // 创建引入别名，来使模块引入更简单
-        // alias: {
-        //     bootstrapcss: "bootstrap/dist/css/bootstrap.css"
-        // }
-        // 指定入口文件查询顺序
-        // mainFields: ["style", "main"]
-        // 指定导入模块查找顺序
-        extensions: [".css", ".js", ".json"]
+    // 告诉webpack哪些第三方模块不用打包
+    externals: {
+        /* 
+        告诉webpack我们通过import导入jQuery的时候不是导入node_moduls中的jquery而是导入
+        我们全局引入的jquery */
+        jquery: 'jQuery',
+        lodash: '_'
     },
+    // resolve: {
+    // 创建引入别名，来使模块引入更简单
+    // alias: {
+    //     bootstrapcss: "bootstrap/dist/css/bootstrap.css"
+    // }
+    // 指定入口文件查询顺序
+    // mainFields: ["style", "main"]
+    // 指定导入模块查找顺序
+    // extensions: [".css", ".js", ".json"]
+    // },
     // 告诉webpack需要对代码进行分割
     optimization: {
         splitChunks: {
@@ -218,6 +226,8 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
             $: "jquery" // 表示在全局状态下导入jquery
-        })
+        }),
+        // 告诉webpack在打包moment这个库的时候将locale目录忽视掉
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]
 };
