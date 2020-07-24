@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>51-webpack-dll动态链接库上</title>
+</head>
+<body>
+<!--
+1.什么是dll动态链接库?
+dll动态链接库和externals功能其实是一样的,
+都是用于防止重复打包不会发生变化的第三方模块,
+都是用于提升webpack打包效率的
+只不过externals不太符合前端的模块化思想, 所以就有了dll动态链接库
+
+
+2.如何实现让第三方模块只打包一次
+2.1单独配置一个config.js文件打包不会发生变化的第三方库 
+module.exports = {
+    mode: 'production',
+    entry: {
+        vendors: 'jquery'
+    },
+    output: {
+        filename: '[name].[contenthash:8].js',
+        path: path.resolve(__dirname, 'dll'),
+        library: '[name]' // 表示打包的是一个库, 表示将打包的内容通过全局变量暴露出去
+    }
+};
+2.2通过插件将打包好的库引入到界面上
+npm install --save-d add-asset-html-webpack-plugin
+new AddAssetHtmlWebpackPlugin({
+    filepath: path.resolve(__dirname, 'dll/vendors.js')
+})
+注意点: 该插件需要配合HtmlWebpackPlugin使用, 并且需要在HtmlWebpackPlugin后创建
+
+2.3生成动态库的映射关系
+因为我们有可能将几个库打包到一个文件中, 所以需要生成一个映射文件方便webpack能够从中找到对应的库
+plugins: [
+    new Webpack.DllPlugin({
+        name: '[name]',
+        path: path.resolve(__dirname, 'dll/[name].manifest.json')
+    })
+]
+注意点: 这里的name必须和library一致
+
+2.4告诉webpack去哪里查找动态库
+在打包的时候如何webpack回到指定的映射文件中查找对应的动态库,
+找打了那么就不会重新打包动态库中的内容了, 如果找不到才会重新打包
+new Webpack.DllReferencePlugin({
+    manifest: path.resolve(__dirname, 'dll/vendors.manifest.json')
+})
+-->
+</body>
+</html>
