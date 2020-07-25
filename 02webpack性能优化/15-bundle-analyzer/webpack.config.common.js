@@ -5,20 +5,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const fs = require("fs");
+const HappyPack = require('happypack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-
-module.exports = {
-    // resolve: {
-    // 创建引入别名，来使模块引入更简单
-    // alias: {
-    //     bootstrapcss: "bootstrap/dist/css/bootstrap.css"
-    // }
-    // 指定入口文件查询顺序
-    // mainFields: ["style", "main"]
-    // 指定导入模块查找顺序
-    // extensions: [".css", ".js", ".json"]
-    // },
-    // 告诉webpack需要对代码进行分割
+const config = {
     optimization: {
         splitChunks: {
             chunks: 'all'
@@ -26,8 +17,9 @@ module.exports = {
     },
     // entry: 指定需要打包的文件
     entry: {
-        // other: "./src/js/demo.js",
-        main: "./src/js/index.js",
+        index: "./src/js/index.js",
+        detail: "./src/js/detail.js",
+        account: "./src/js/account.js"
     },
     /*
     output: 指定打包之后的文件输出的路径和输出的文件名称
@@ -63,32 +55,11 @@ module.exports = {
             //         fix: true // 是否帮助我们修复
             //     },
             // },
-            // 打包JS规则
+            // 打包JS规则,使用happyPack多线程打包
             {
                 test: /\.js$/,
-                exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
-                loader: "babel-loader",
-                options: {
-                    "presets": [["@babel/preset-env", {
-                        targets: {
-                            // "chrome": "58",
-                        },
-                        // useBuiltIns: "usage"
-                    }]],
-                    "plugins": [
-                        ["@babel/plugin-proposal-class-properties"],
-                        [
-                            "@babel/plugin-transform-runtime",
-                            {
-                                "absoluteRuntime": false,
-                                "corejs": 2,
-                                "helpers": true,
-                                "regenerator": true,
-                                "useESModules": false
-                            }
-                        ]
-                    ]
-                }
+                exclude: /node_modules/,
+                use: 'happypack/loader?id=js'
             },
             // 打包字体图标规则
             {
@@ -209,23 +180,12 @@ module.exports = {
     /*
     plugins: 告诉webpack需要新增一些什么样的功能
     * */
-    plugins: [
-        new HtmlWebpackPlugin({
-            // 指定打包的模板, 如果不指定会自动生成一个空的
-            template: "./src/index.html",
-            minify: {
-                // 告诉htmlplugin打包之后的html文件需要压缩
-                // collapseWhitespace: true,
-            }
-        }),
-        // 将第三方库引入
-        new AddAssetHtmlPlugin({
-            filepath: path.resolve(__dirname, "dll/vendors.dll.js")
-        }),
-        // 告诉webpack第三方库的清单，在打包时这些已打包好的库直接引入就好，不需要再重复打包
-        new webpack.DllReferencePlugin({
-            manifest: path.resolve(__dirname, 'dll/vendors.manifest.json')
-        }),
+    // plugins: plugins
+};
+config.plugins = addPlugins(config);
+function addPlugins(config) {
+    const plugins = [
+        new BundleAnalyzerPlugin(),
         new CleanWebpackPlugin(),
         new CopyPlugin({
             patterns: [
@@ -239,6 +199,67 @@ module.exports = {
             $: "jquery" // 表示在全局状态下导入jquery
         }),
         // 告诉webpack在打包moment这个库的时候将locale目录忽视掉
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        // 创建HappyPack插件实现多线程打包
+        new HappyPack({
+            id: 'js',
+            use: [{
+                test: /\.js$/,
+                exclude: /node_modules/, // 告诉webpack不处理哪一个文件夹
+                loader: "babel-loader",
+                options: {
+                    "presets": [["@babel/preset-env", {
+                        targets: {
+                            // "chrome": "58",
+                        },
+                        // useBuiltIns: "usage"
+                    }]],
+                    "plugins": [
+                        ["@babel/plugin-proposal-class-properties"],
+                        [
+                            "@babel/plugin-transform-runtime",
+                            {
+                                "absoluteRuntime": false,
+                                "corejs": 2,
+                                "helpers": true,
+                                "regenerator": true,
+                                "useESModules": false
+                            }
+                        ]
+                    ]
+                }
+            }]
+        })
     ]
-};
+
+    // HtmlWebpackPlugin的动态添加
+    Object.keys(config.entry).forEach(function (keys) {
+        plugins.push(new HtmlWebpackPlugin({
+            // 指定打包的模板, 如果不指定会自动生成一个空的
+            template: './src/index.html',
+            filename: keys + ".html",
+            chunks: [keys, "vendors~" + keys]
+        }))
+    })
+
+    // 动态链接库相关配置
+    const dllPath = path.join(__dirname, "dll");
+    const files = fs.readdirSync(dllPath);
+    files.forEach(function (file) {
+        if (file.endsWith(".js")) {
+            // 将第三方库引入到html中
+            plugins.push(new AddAssetHtmlPlugin({
+                filepath: path.resolve(__dirname, "dll", file)
+            }))
+        } else if (file.endsWith(".json")) {
+            // 告诉webpack第三方库的清单，在打包时这些已打包好的库不需要再重复打包
+            plugins.push(new webpack.DllReferencePlugin({
+                manifest: path.resolve(__dirname, 'dll', file)
+            }))
+        }
+    })
+    return plugins;
+}
+
+
+module.exports = config;
