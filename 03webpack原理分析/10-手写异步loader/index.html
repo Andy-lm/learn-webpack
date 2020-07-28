@@ -2,33 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>10-Loader参数处理</title>
+    <title>12-手写异步Loader</title>
 </head>
 <body>
 <!--
-1.如何处理Loader参数?
-在webpack.config.js中配置Loader的时候, 可以通过options配置一些额外的参数
-那么我们在编写Loader的时候如何拿到通过options传递过来的参数呢?
-1.1通过loader函数中的this获取
-this.query.xxx
-https://www.webpackjs.com/api/loaders/#this-query
-1.2通过loader-utils模块获取
-npm install --save-d loader-utils
-let options = loaderUtils.getOptions(this);
-options.xxx
-
-2.如何校验Loader参数
-通过schema-utils模块来校验
-npm install --save-d schema-utils
-let schema = {
-  type: "object",
-  properties: {
-    name: {
-      type: "string"
-    },
-    additionalProperties: false
-}
-validateOptions(schema, options, 'ReplaceLoader');
+1.如何Loader中有异步操作, 不能立刻返回怎么办?
+https://www.webpackjs.com/api/loaders/#this-callback
+可以通过以下代码返回异步操作的结果
+let callback = this.async();
+第一个参数必须是 Error 或者 null
+第二个参数是一个 string 或者 Buffer。
+可选的：第三个参数必须是一个可以被这个模块解析的 source map。
+可选的：第四个选项，会被 webpack 忽略，可以是任何东西（例如一些元数据）
+callback(null, result, map, meta);
 -->
 </body>
 </html>

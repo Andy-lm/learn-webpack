@@ -21,6 +21,13 @@ module.exports = function (source) {
     }
     // 利用校验规则进行校验
     validateOptions(schema, options, "ReplaceLoader");
-    source = source.replace(/lmm/g, options.name);
-    return source;
+
+    let callback = this.async();
+    setTimeout(function () {
+        source = source.replace(/lmm/g, options.name);
+        // 使用异步操作返回数据
+        callback(null, source);
+        // return source;
+    }, 3000);
+
 }
