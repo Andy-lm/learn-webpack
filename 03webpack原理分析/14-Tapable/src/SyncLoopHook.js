@@ -1,5 +1,5 @@
 // 定义一个类作为发布者
-class SyncWaterfallHook {
+class SyncLoopHook {
     constructor(args) {
         // 定义一个空数组保存订阅信息
         this.tasks = [];
@@ -17,12 +17,13 @@ class SyncWaterfallHook {
         }
         args = args.slice(0, this.args.length);
         // 遍历任务列表，发送信息
-        let [firstTask, ...others] = this.tasks;
-        let result = firstTask(...args);
-        others.forEach(function (task) {
-            result = task(result);
+        this.tasks.forEach(function (task) {
+            let result = undefined;
+            do {
+                result = task(...args);
+            } while (result !== undefined);
         })
     }
 }
 
-module.exports = SyncWaterfallHook;
+module.exports = SyncLoopHook;
