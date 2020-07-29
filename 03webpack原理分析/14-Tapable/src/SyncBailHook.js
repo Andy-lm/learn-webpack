@@ -1,5 +1,5 @@
 // 定义一个类作为发布者
-class SyncHook {
+class SyncBailHook {
     constructor(args) {
         // 定义一个空数组保存订阅信息
         this.tasks = [];
@@ -17,20 +17,14 @@ class SyncHook {
         }
         args = args.slice(0, this.args.length);
         // 遍历任务列表，发送信息
-        this.tasks.forEach(function (callback) {
-            callback(...args); // ...args = name, price
-        })
+        for (let i = 0; i < this.tasks.length; i++) {
+            let task = this.tasks[i];
+            let result = task(...args);
+            if (result !== undefined) {
+                break;
+            }
+        }
     }
 }
-// // 创建发布者
-// let hook = new SyncHook(["name", "price"]);
-// // 订阅者添加订阅
-// hook.tap("zs", function (name, price) {
-//     console.log(name, price);
-// })
-// hook.tap("ls", function (name, price) {
-//     console.log(name, price);
-// })
-// // 到货之后发布消息
-// hook.call("法拉利", 88888);
-module.exports = SyncHook;
+
+module.exports = SyncBailHook;
