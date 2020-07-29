@@ -4,19 +4,20 @@
 // const SyncLoopHook = require("./SyncLoopHook"); 
 // const AsyncParallelHook = require("./AsyncParallelHook");
 // const AsyncParallelHook = require("./AsyncParallelHookPromise");
-const AsyncSeriesHook = require("./AsyncSeriesHookPromise");
+// const AsyncSeriesHook = require("./AsyncSeriesHookPromise");
+const AsyncSeriesWaterfallHook = require("./AsyncSeriesWaterfallHookPromise.js");
 // const { SyncHook } = require("tapable");
 // const { SyncBailHook } = require("tapable");
 // const { SyncWaterfallHook } = require("tapable");
 // const { SyncLoopHook } = require("tapable");
 // const { AsyncParallelHook } = require("tapable");
 // const { AsyncSeriesHook } = require("tapable");
-
+// const { AsyncSeriesWaterfallHook } = require("tapable");
 class Lesson {
     constructor() {
         this.hooks = {
             // 创建一个发布者对象
-            vue: new AsyncSeriesHook(["Notification"])
+            vue: new AsyncSeriesWaterfallHook(["Notification"])
 
         }
         this.index = 0;
@@ -29,7 +30,9 @@ class Lesson {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log("zs", args);
-                    resolve();
+                    // resolve("1");
+                    // 使用reject表示发送失败
+                    reject("1111111111");
                 }, 3000)
             })
         })
@@ -37,7 +40,7 @@ class Lesson {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log("ls", args);
-                    // resolve();
+                    resolve("2");
                 }, 2000)
             })
         })
@@ -45,7 +48,7 @@ class Lesson {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log("ww", args);
-                    resolve();
+                    resolve("3");
                 }, 1000)
             })
         })
@@ -55,6 +58,8 @@ class Lesson {
         // 发布消息
         this.hooks.vue.promise("您订阅的课程上线啦").then(function () {
             console.log("所有的课程通知已经完成");
+        }).catch(function (err) {
+            console.log(err);
         })
     }
 }

@@ -3,19 +3,21 @@
 // const SyncWaterfallHook = require("./SyncWaterfallHook"); 
 // const SyncLoopHook = require("./SyncLoopHook"); 
 // const AsyncParallelHook = require("./AsyncParallelHook");
-const AsyncSeriesHook = require("./AsyncSeriesHook");
+// const AsyncSeriesHook = require("./AsyncSeriesHook");
+const AsyncSeriesWaterfallHook = require("./AsyncSeriesWaterfallHook.js");
 // const { SyncHook } = require("tapable");
 // const { SyncBailHook } = require("tapable");
 // const { SyncWaterfallHook } = require("tapable");
 // const { SyncLoopHook } = require("tapable");
 // const { AsyncParallelHook } = require("tapable");
 // const { AsyncSeriesHook } = require("tapable");
+// const { AsyncSeriesWaterfallHook } = require("tapable");
 
 class Lesson {
     constructor() {
         this.hooks = {
             // 创建一个发布者对象
-            vue: new AsyncSeriesHook(["Notification"])
+            vue: new AsyncSeriesWaterfallHook(["Notification"])
 
         }
         // this.index = 0;
@@ -26,13 +28,15 @@ class Lesson {
         this.hooks.vue.tapAsync("zs", (args, callback) => {
             setTimeout(function () {
                 console.log("zs", args);
-                callback();
+                // null代表上一个通知已经执行完成
+                // 第二个参数会传递给下一个通知
+                callback(null, "zs已通知");
             }, 3000)
         })
         this.hooks.vue.tapAsync("ls", function (args, callback) {
             setTimeout(function () {
                 console.log("ls", args);
-                callback();
+                callback(null, "ls已通知");
             }, 2000)
         })
         this.hooks.vue.tapAsync("ww", function (args, callback) {
