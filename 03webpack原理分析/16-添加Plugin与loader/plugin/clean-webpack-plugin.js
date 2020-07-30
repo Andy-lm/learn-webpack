@@ -16,6 +16,7 @@ class CleanWebpackPlugin {
     }
     // 注意点：node.js中不能直接删除非空目录
     cleanDir(dirPath) {
+        // 判断一下如果bundle目录不存在，直接返回便好
         if (!fs.existsSync(dirPath)) {
             return;
         }
